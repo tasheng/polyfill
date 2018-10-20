@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
+</div>
+{% endfor %}
+<form action="{{ url_for('insert') }}" method="post">
+    <div class="form-group row">
+        <label for="cat" class="col-sm-2 col-form-label">類別</label>
+        <div class="col-sm-2">
+            <select name="cat" id="cat" class="form-control" type="text" onchange="query($('#cat').val())">
+                {% for i in range(3) %}
+                <option>{{ table_names[i] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <label for="unit" class="col-sm-2 col-form-label">股別</label>
+        <div class="col-sm-2">
+            <input name="unit" id="unit" type="text" value="{{ unit }}" class="form-control" autofocus required disabled maxlength="1" size="1">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="case" class="col-sm-2 col-form-label">案號</label>
+        <div class="col-sm-2">
+            <input name="case-year" id="case-year" type="number" value="107" class="form-control" required>
+        </div>
+        <div class="col-sm-2">
+            <input name="case-cat" id="case-cat" type="text" value="偵" class="form-control" required>
+        </div>
+        <div class="col-sm-2">
+            <input name="case-num" id="case-num" type="number" class="form-control" required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="date" class="col-sm-2 col-form-label">日期</label>
+        <div class="col-sm-6">
+            <input name="date" id="date" type="date" class="form-control"
+                   min="{{ today }}" max="2018-12-31" value="{{ today }}" required
+                   onchange="query($('#cat').val())">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="start_time" class="col-sm-2 col-form-label">開始時間</label>
+        <div class="col-sm-6">
+            <input name="start_time" id="start_time" type="time" class="form-control"
+                   value="09:00" required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="duration" class="col-sm-2 col-form-label">訊問時長</label>
+        <div class="col-sm-6">
+            <div class="input-group">
+                <select name="duration" id="duration" class="form-control" type="number">
+                    {% for min in range(5, 95, 5) %}
+                    <option>{{ min }}</option>
+                    {% endfor %}
+                </select>
+                <div class="input-group-append">
+                    <span class="input-group-text">分鐘</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="comment" class="col-sm-2 col-form-label">備註</label>
+        <div class="col-sm-6">
+            <input name="comment" id="comment" type="text" class="form-control">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-6">
+            <button type="submit" class="btn btn-primary mb-2">新增</button>
+        </div>
+    </div>
+</form>
+
+<br />
+
+<div class="table-responsive">
+    <table class="table" id="sessions">
+        <thead>
+            <tr>
+                <th scope="col">股別</th>
+                <th scope="col">案號</th>
+                <th scope="col">日期</th>
+                <th scope="col">開始時間</th>
+                <th scope="col">結束時間</th>
+                <!-- <th scope="col">備註</th> -->
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script src="{{ url_for('static', filename='table_lang.js') }}"></script>
+<script>
+ function query(cat) {
+     $.post('/update', {
+         date: $("#date").val(),
+         table: $("#cat").val()
+     }).done(displaySession);
+ }
+ function displaySession(response) {
+     dt.clear();
+     dt.rows.add(response);
+     dt.draw();
+ }
+
+ var dt;
+
+ $( document ).ready( function() {
+     $.post('/update', {
+         date: $("#date").val(),
+         table: $("#cat").val()
+     }).done( function (response) {
+         dt = $("table").DataTable( {
+             bDestroy: true,
+             searching: false,
+             paging: false,
+             info: false,
+             language: language,
+             data : response,
+             columns: [
+                 { data: 'unit' },
+                 { data: 'caseName' },
+                 { data: 'date' },
+                 { data: 'startTime' },
+                 { data: 'endTime' }
+             ],
+             columnDefs: [
+                 { width: 150, targets: '_all' }
+             ]
+         } );
+     } );
+ } );
+</script>
+<!-- <script src="static/rome.js"></script> -->
+<!-- <script src='static/moment-with-locales.js'></script> -->
+<!-- <script src='static/rome.standalone.js'></script> -->
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='rome.css') }}"> -->
+<!-- <script> -->
+<!-- moment.locale('zh-tw'); -->
+<!-- rome(date, {time: false, -->
+<!-- weekStart: 1}); -->
+<!-- rome(start_time, {date: false, -->
+<!-- timeInterval: 300, -->
+<!-- "initialValue": "09:00", -->
+<!-- min: "09:00", -->
+<!-- max: "15:00"}); -->
+<!-- </script> -->
+<script src="../static/neo-date-input-polyfill/dist/neo-date-input-polyfill.min.js"></script>
+{% endblock content %}
