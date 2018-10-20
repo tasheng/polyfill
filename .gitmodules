@@ -1,0 +1,3 @@
+[submodule "static"]
+	path = static
+	url = https://github.com/andrunix/neo-date-input-polyfill.git

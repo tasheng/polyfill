@@ -52,14 +52,13 @@
             <script type="text/javascript" src="static/DataTables-1.10.18/js/jquery.dataTables.js"></script>
             <script type="text/javascript" src="static/DataTables-1.10.18/js/dataTables.bootstrap4.js"></script>
             <div class="starter-template">
-                <form action="{{ url_for('insert') }}" method="post">
+                <form method="post">
                     <div class="form-group row">
                         <label for="cat" class="col-sm-2 col-form-label">類別</label>
                         <div class="col-sm-2">
                             <select name="cat" id="cat" class="form-control" type="text" onchange="query($('#cat').val())">
-                                {% for i in range(3) %}
-                                <option>{{ table_names[i] }}</option>
-                                {% endfor %}
+                                <option>1</option>
+                                <option>2</option>
                             </select>
                         </div>
                         <label for="unit" class="col-sm-2 col-form-label">股別</label>
@@ -98,7 +97,8 @@
                         <label for="duration" class="col-sm-2 col-form-label">訊問時長</label>
                         <div class="col-sm-6">
                             <div class="input-group">
-                                    <option>{{ 5 }}</option>
+                                    <option>5</option>
+                                    <option>10</option>
                                 </select>
                                 <div class="input-group-append">
                                     <span class="input-group-text">分鐘</span>
@@ -194,7 +194,7 @@
                 <!-- min: "09:00", -->
                 <!-- max: "15:00"}); -->
                 <!-- </script> -->
-                <script src="../static/neo-date-input-polyfill/dist/neo-date-input-polyfill.min.js"></script>
+                <script src="static/neo-date-input-polyfill/dist/neo-date-input-polyfill.min.js"></script>
             </div>
 
         </main><!-- /.container -->
