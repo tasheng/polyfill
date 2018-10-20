@@ -10,12 +10,15 @@
 
     <p>
       normal:
-      <input type="date" />
+      <input type="date" oninput="" />
       <script>
         var theDate = document.querySelector('input[type="date"]');
         theDate.addEventListener('change', function() {
           console.log('blank date input:', theDate.value);
         });
+       function ch() {
+           alet("changeD");
+       }
       </script>
     </p>
 
